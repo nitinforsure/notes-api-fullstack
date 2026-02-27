@@ -6,7 +6,8 @@
 let currentPage = 1;
 let totalPages = 1;
 const limit = 5;
-
+let currentSearch = "";
+let currentSort = "desc";
 // ==========================
 // REGISTER
 // ==========================
@@ -83,12 +84,12 @@ async function loadNotes() {
     return;
   }
 
-  const res = await fetch(
-    `/api/notes?page=${currentPage}&limit=${limit}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+ const res = await fetch(
+  `/api/notes?page=${currentPage}&limit=${limit}&search=${currentSearch}&sort=${currentSort}`,
+  {
+    headers: { Authorization: `Bearer ${token}` },
+  }
+);
 
   const data = await res.json();
   const notes = data.notes;
@@ -146,7 +147,26 @@ if (prevBtn && nextBtn) {
     }
   });
 }
+//Added Search & Sort Logic
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+const sortSelect = document.getElementById("sortSelect");
 
+if (searchBtn) {
+  searchBtn.addEventListener("click", () => {
+    currentSearch = searchInput.value.trim();
+    currentPage = 1; // reset page when searching
+    loadNotes();
+  });
+}
+
+if (sortSelect) {
+  sortSelect.addEventListener("change", () => {
+    currentSort = sortSelect.value;
+    currentPage = 1; // reset page when sorting changes
+    loadNotes();
+  });
+}
 // ==========================
 // CREATE NOTE
 // ==========================
