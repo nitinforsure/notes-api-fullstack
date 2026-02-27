@@ -50,4 +50,4 @@ Supports query params:
    MONGO_URI=your_mongo_uri
    JWT_SECRET=your_secret
 4. Run:
-   npm run dev
+   node server.js
