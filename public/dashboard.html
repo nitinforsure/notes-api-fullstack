@@ -13,12 +13,27 @@
 
 <h3>Create Note</h3>
 
+
+
 <form id="noteForm">
-  <input type="text" id="title" placeholder="Title" required /><br><br>
-  <input type="text" id="content" placeholder="Content" required /><br><br>
+  <textarea 
+    id="title" 
+    placeholder="Enter title..." 
+    class="auto-grow title-box"
+    required
+  ></textarea>
+  <br><br>
+
+  <textarea 
+    id="content" 
+    placeholder="Write your note..." 
+    class="auto-grow content-box"
+    required
+  ></textarea>
+  <br><br>
+
   <button type="submit">Add Note</button>
 </form>
-
 <hr>
 
 <div style="margin-bottom: 15px;">

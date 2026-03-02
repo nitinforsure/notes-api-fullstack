@@ -265,3 +265,9 @@ if (logoutBtn) {
     window.location.href = "login.html";
   });
 }
+document.querySelectorAll(".auto-grow").forEach((textarea) => {
+  textarea.addEventListener("input", function () {
+    this.style.height = "auto";
+    this.style.height = this.scrollHeight + "px";
+  });
+});

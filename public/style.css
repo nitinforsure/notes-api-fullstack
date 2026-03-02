@@ -1,0 +1,22 @@
+.title-box {
+  width: 100%;
+  min-height: 40px;
+  font-size: 16px;
+  padding: 8px;
+  resize: none;
+}
+
+.content-box {
+  width: 100%;
+  min-height: 100px;
+  font-size: 15px;
+  padding: 10px;
+  resize: none;
+}
+
+.auto-grow {
+  overflow: hidden;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  transition: height 0.2s ease;
+}
