@@ -100,16 +100,21 @@ async function loadNotes() {
   notes.forEach((note) => {
     const div = document.createElement("div");
 
-    div.innerHTML = `
-      <div id="note-${note._id}">
-        <h4>${note.title}</h4>
-        <p>${note.content}</p>
-        <button onclick="enableEdit('${note._id}', '${note.title}', '${note.content}')">Edit</button>
-        <button onclick="deleteNote('${note._id}')">Delete</button>
-        <hr>
-      </div>
-    `;
+   div.innerHTML = `
+  <div id="note-${note._id}">
+    <h4>${note.title}</h4>
+    <p>${note.content}</p>
+    
+    <small>
+      ${note.isPublic ? "🌍 Public" : "🔒 Private"}
+    </small>
+    <br><br>
 
+    <button onclick="enableEdit('${note._id}', '${note.title}', '${note.content}')">Edit</button>
+    <button onclick="deleteNote('${note._id}')">Delete</button>
+    <hr>
+  </div>
+`;
     notesContainer.appendChild(div);
   });
 
@@ -179,14 +184,16 @@ if (noteForm) {
     const token = localStorage.getItem("token");
     const title = document.getElementById("title").value;
     const content = document.getElementById("content").value;
-
+    const isPublic = document.getElementById("isPublic").checked;
+    //temporary checking phase it is for
+    console.log("Checkbox:", isPublic);
     const res = await fetch("/api/notes", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ title, content }),
+      body: JSON.stringify({ title, content, isPublic }),
     });
 
     if (res.ok) {
@@ -253,6 +260,37 @@ async function saveEdit(id) {
     alert("Failed to update note");
   }
 }
+
+// Explore Public Notes button
+const exploreBtn = document.getElementById("exploreBtn");
+
+if (exploreBtn) {
+  exploreBtn.addEventListener("click", loadPublicNotes);
+}
+// for loading public notes
+async function loadPublicNotes() {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch("/api/notes/public", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const notes = await res.json();
+
+  notesContainer.innerHTML = "<h3>Public Notes</h3>";
+
+  notes.forEach(note => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <h4>${note.title}</h4>
+      <p>${note.content}</p>
+      <small>By: ${note.user.name}</small>
+      <hr>
+    `;
+    notesContainer.appendChild(div);
+  });
+}
+
 
 // ==========================
 // LOGOUT

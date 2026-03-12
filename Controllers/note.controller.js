@@ -1,8 +1,9 @@
 const Note = require("../Models/notes.model");
 const CreateNote = async(req , res )=>{
     try{
-         const {title, content} = req.body;
-         const note = await Note.create({title, content, user: req.userId});
+         const {title, content, isPublic } = req.body;
+         const note = await Note.create({title, 
+          content, user: req.userId, isPublic: isPublic || false});
          res.status(201).json(note);
            
 
@@ -47,7 +48,8 @@ const GetAllNotes = async (req, res) => {
       user: req.userId,
       $or: [
         { title: { $regex: search, $options: "i" } },
-        { content: { $regex: search, $options: "i" } }
+        { content: { $regex: search, $options: "i" } },
+        
       ]
     };
 
@@ -121,7 +123,18 @@ res.status(500).json({message: error.message});
     }
   
 };
+const getPublicNotes = async (req, res) => {
+  try {
+    const notes = await Note.find({ isPublic: true })
+      .populate("user", "name")
+      .sort({ createdAt: -1 });
 
+    res.status(200).json(notes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to fetch public notes" });
+  }
+};
 
 module.exports = {
     CreateNote,
@@ -129,4 +142,5 @@ module.exports = {
     GetNoteById,
     UpdateNote,
     deleteNote,
+    getPublicNotes
 }
