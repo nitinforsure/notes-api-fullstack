@@ -111,7 +111,11 @@ async function loadNotes() {
     <br><br>
 
     <button onclick="enableEdit('${note._id}', '${note.title}', '${note.content}')">Edit</button>
-    <button onclick="deleteNote('${note._id}')">Delete</button>
+   <button onclick="toggleVisibility('${note._id}')">
+  ${note.isPublic ? "Make Private 🔒" : "Make Public 🌍"}
+</button>
+
+<button onclick="deleteNote('${note._id}')">Delete</button>
     <hr>
   </div>
 `;
@@ -203,6 +207,22 @@ if (noteForm) {
   });
 }
 
+async function toggleVisibility(noteId) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`/api/notes/${noteId}/visibility`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  if (res.ok) {
+    loadNotes();
+  } else {
+    alert("Failed to update visibility");
+  }
+}
 // ==========================
 // DELETE NOTE
 // ==========================

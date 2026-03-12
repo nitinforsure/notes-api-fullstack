@@ -135,12 +135,36 @@ const getPublicNotes = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch public notes" });
   }
 };
+// toggle switch for changing public and private status of notes
+const toggleVisibility = async (req, res) => {
+  try {
+    const note = await Note.findOne({
+      _id: req.params.id,
+      user: req.userId
+    });
 
+    if (!note) {
+      return res.status(404).json({ message: "Note not found" });
+    }
+
+    note.isPublic = !note.isPublic;
+    await note.save();
+
+    res.json({
+      message: "Visibility updated",
+      isPublic: note.isPublic
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
 module.exports = {
     CreateNote,
     GetAllNotes,
     GetNoteById,
     UpdateNote,
     deleteNote,
-    getPublicNotes
+    getPublicNotes,
+    toggleVisibility
 }
